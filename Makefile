@@ -1,5 +1,6 @@
-LOG_FILE?=
-TARGET="chip8"
+LOG_FILE ?=
+TARGET = chip8
+ROM ?=
 
 all: build run
 
@@ -41,11 +42,12 @@ link_test:
 	gcc -Wall -o bin/test/$(TARGET) $(wildcard obj/test/*.o)
 
 run:
-	./bin/$(TARGET)
+	./bin/$(TARGET) "$(ROM)"
 
 run_test:
-	./bin/test/$(TARGET)
+	./bin/test/$(TARGET) "$(ROM)"
 
+.PHONY: debug
 debug:
 	make build
 
@@ -54,7 +56,7 @@ debug:
 		touch debug/setup.lldb; \
 	fi
 
-	lldb ./bin/$(TARGET)
+	lldb ./bin/$(TARGET) "$(ROM)"
 
 debug_test:
 	make build_test
@@ -64,7 +66,7 @@ debug_test:
 		touch debug/test/setup.lldb; \
 	fi
 
-	lldb ./bin/test/$(TARGET)
+	lldb -- ./bin/test/$(TARGET) "$(ROM)"
 
 
 clean:
