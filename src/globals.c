@@ -39,6 +39,16 @@ void log_close() {
 #endif
 }
 
+void add_pc(System *sys, uint8_t val) { sys->pc += (val * 2); }
+
+void setup_system(System *sys) {
+	System val = {
+		{0}, {0},	0,		 {0},
+		0,	 0x200, &add_pc, {{0}, {0}, {0}, {0}, {0}, {0}, {0}, {0}}};
+
+	*sys = val;
+}
+
 void *smalloc(size_t size) {
 	void *ret = malloc(size);
 	eassert(ret != NULL);

@@ -7,12 +7,16 @@
 int main(int argc, char **argv) {
 	log_init(NULL);
 
-	System sys = {
-		{0}, {0}, 0, {0}, 0, 0x200, {{0}, {0}, {0}, {0}, {0}, {0}, {0}, {0}}};
+	System sys;
+
+	setup_system(&sys);
 
 	load_rom(&sys, argc, argv);
 
-	execute(&sys, sys.memory[sys.program_counter]);
+	// TODO: This is what we call some bullshit
+	uint16_t instruction = *((uint16_t *)&sys.memory[sys.pc]);
+
+	execute(&sys, instruction);
 
 	return EXIT_SUCCESS;
 }

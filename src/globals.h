@@ -4,6 +4,7 @@
 #include <assert.h>
 #include <errno.h>
 #include <stdarg.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -13,13 +14,17 @@ typedef struct System {
 	uint8_t registers[16];
 	uint16_t addr_reg; // 12 bits
 
-	uint16_t stack[16];
+	uint16_t call_stack[16];
 	int stack_ptr;
 
-	uint16_t program_counter; // 12 bits;
+	uint16_t pc; // 12 bits;
+
+	void (*add_pc)(struct System *sys, uint8_t val);
 
 	uint8_t display[8][4]; // d[x][y]
 } System;
+
+void setup_system(System *sys);
 
 #ifndef LOG_LEVEL
 #define LOG_LEVEL 1

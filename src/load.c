@@ -3,6 +3,7 @@
 #include <assert.h>
 #include <stdint.h>
 #include <stdio.h>
+#include <string.h>
 #include <unistd.h>
 
 void load_rom(System *sys, int arglen, char **args) {
@@ -31,7 +32,9 @@ void load_rom(System *sys, int arglen, char **args) {
 	eassert(feof(rom_file) == 0); // Up until end, don't try to read the end
 
 	assert(sizeof(char) == sizeof(uint8_t));
-	snprintf((char *)(sys->memory + 0x200), length, "%s", contents);
+	memcpy((sys->memory + 0x200), contents, length);
+
+	Log(3, "LOAD: Contents:\n%s\n", (char *)(sys->memory + 0x200));
 
 	fclose(rom_file);
 }
