@@ -4,6 +4,7 @@
 #include <assert.h>
 #include <errno.h>
 #include <stdarg.h>
+#include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -21,7 +22,17 @@ typedef struct System {
 
 	void (*add_pc)(struct System *sys, uint8_t val);
 
-	uint8_t display[8][4]; // d[x][y]
+	bool draw;
+	bool (*redraw)(struct System *sys, uint8_t sprite);
+	uint8_t _display[8][32]; // d[x][y]
+
+	// TODO: Implement timer
+	uint8_t (*set_delay_timer)(struct System *sys, uint8_t val);
+	uint8_t (*set_sound_timer)(struct System *sys, uint8_t val);
+	uint8_t (*read_delay_timer)(struct System *sys);
+
+	uint8_t _delay_timer;
+	uint8_t _sound_timer;
 } System;
 
 void setup_system(System *sys);
