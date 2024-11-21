@@ -6,7 +6,6 @@
 #include <string.h>
 #include <unistd.h>
 
-// FIX: Switch from little-endian to big-endian reading
 void load_rom(System *sys, int arglen, char **args) {
 	assert(arglen == 2);
 
