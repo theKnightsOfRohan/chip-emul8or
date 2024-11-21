@@ -13,10 +13,14 @@ int main(int argc, char **argv) {
 
 	load_rom(&sys, argc, argv);
 
-	// TODO: This is what we call some bullshit
-	uint16_t instruction = *((uint16_t *)&sys.memory[sys.pc]);
+	uint16_t instruction = 0xFFFF;
 
-	execute(&sys, instruction);
+	while (instruction != 0x0000) {
+		// TODO: This is what we call some bullshit
+		instruction = *((uint16_t *)&sys.memory[sys.pc]);
+
+		execute(&sys, instruction);
+	}
 
 	return EXIT_SUCCESS;
 }

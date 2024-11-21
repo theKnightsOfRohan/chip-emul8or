@@ -22,17 +22,14 @@ typedef struct System {
 
 	void (*add_pc)(struct System *sys, uint8_t val);
 
-	bool draw;
+	bool need_draw;
 	bool (*redraw)(struct System *sys, uint8_t sprite);
-	uint8_t _display[8][32]; // d[x][y]
+	uint8_t _display[32][8]; // d[r][c]
 
 	// TODO: Implement timer
 	uint8_t (*set_delay_timer)(struct System *sys, uint8_t val);
 	uint8_t (*set_sound_timer)(struct System *sys, uint8_t val);
 	uint8_t (*read_delay_timer)(struct System *sys);
-
-	uint8_t _delay_timer;
-	uint8_t _sound_timer;
 } System;
 
 void setup_system(System *sys);

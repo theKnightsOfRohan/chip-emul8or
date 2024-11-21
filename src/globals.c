@@ -1,4 +1,6 @@
 #include "globals.h"
+#include "display.h"
+#include "timer.h"
 #include <assert.h>
 #include <signal.h>
 #include <stdbool.h>
@@ -43,8 +45,20 @@ void add_pc(System *sys, uint8_t val) { sys->pc += (val * 2); }
 
 void setup_system(System *sys) {
 	System val = {
-		{0}, {0},	0,		 {0},
-		0,	 0x200, &add_pc, {{0}, {0}, {0}, {0}, {0}, {0}, {0}, {0}}};
+		{0},   // Memory
+		{0},   // Registers
+		0,	   // Address Register
+		{0},   // Call stack
+		0,	   // Stack pointer
+		0x200, // Program Counter
+		&add_pc,
+		false, // Needs redraw
+		&redraw,
+		{{0}}, // Display
+		&set_delay_timer,
+		&set_sound_timer,
+		&read_delay_timer,
+	};
 
 	*sys = val;
 }

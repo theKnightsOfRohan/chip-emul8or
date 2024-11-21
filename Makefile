@@ -67,7 +67,7 @@ debug_test:
 		touch debug/test/setup.lldb; \
 	fi
 
-	lldb -- ./bin/test/$(TARGET) "$(ROM)"
+	lldb -S debug/test/setup.lldb -- ./bin/test/$(TARGET) "$(ROM)"
 
 
 clean:

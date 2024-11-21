@@ -9,15 +9,15 @@
 void syscall(System *sys, uint16_t args) {
 	assert((args & 0xF000) == 0x0000);
 
-	uint16_t arg = args & 0x00FF;
+	uint16_t op = args & 0x00FF;
 
-	if ((arg & 0x00F0) == 0x00C0) { // TODO: Scroll display down
-		uint8_t scroll_amt = arg & 0x000F;
+	if ((op & 0x00F0) == 0x00C0) { // TODO: Scroll display down
+		uint8_t scroll_amt = op & 0x000F;
 	} else {
-		switch (arg) {
+		switch (op) {
 		case 0x00E0: // NOTE: Clear display
-			for (int i = 0; i < 8; i++) {
-				memset(sys->_display[i], 0, 4);
+			for (int i = 0; i < 32; i++) {
+				memset(sys->_display[i], 0, 8);
 			}
 		case 0x00EE: // NOTE: Return from subroutine
 			assert(sys->stack_ptr >= 0);
@@ -36,6 +36,9 @@ void syscall(System *sys, uint16_t args) {
 			noop();
 		case 0x00FF: // TODO: Enable extended screen mode
 			noop();
+		default:
+			Log(1, "COMMAND MATH: Unrecognized operation %02X\n", op);
+			// TODO: Assert state and error flag in sys
 		}
 	}
 }
@@ -277,5 +280,5 @@ void execute(System *sys, uint16_t operation) {
 
 	sys->add_pc(sys, 1);
 
-	instruction_set[opcode](sys, operation);
+	// instruction_set[opcode](sys, operation);
 }
