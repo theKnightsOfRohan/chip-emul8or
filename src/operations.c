@@ -20,6 +20,7 @@ void syscall(System *sys, uint16_t args) {
 				memset(sys->_display[i], 0, 8);
 			}
 			break;
+
 		case 0x00EE: // Return from subroutine
 			assert(sys->stack_ptr >= 0);
 
@@ -28,21 +29,27 @@ void syscall(System *sys, uint16_t args) {
 			sys->stack_ptr -= 1;
 
 			break;
+
 		case 0x00FB: // TODO: Scroll display 4 pixels left
 			noop();
 			break;
+
 		case 0x00FC: // TODO: Scroll display 4 pixels right
 			noop();
 			break;
+
 		case 0x00FD: // TODO: Exit program
 			noop();
 			break;
+
 		case 0x00FE: // TODO: Disable extended screen mode
 			noop();
 			break;
+
 		case 0x00FF: // TODO: Enable extended screen mode
 			noop();
 			break;
+
 		default:
 			Log(1, "COMMAND MATH: Unrecognized operation %02X\n", op);
 			// TODO: Assert state and error flag in sys
@@ -128,40 +135,49 @@ void math(System *sys, uint16_t args) {
 	case 0x00:
 		sys->registers[dest] = sys->registers[src];
 		break;
+
 	case 0x01:
 		sys->registers[dest] |= sys->registers[src];
 		break;
+
 	case 0x02:
 		sys->registers[dest] &= sys->registers[src];
 		break;
+
 	case 0x03:
 		sys->registers[dest] ^= sys->registers[src];
 		break;
+
 	case 0x04:
 		sys->registers[dest] += sys->registers[src];
 		set_flag = sys->registers[dest] < sys->registers[src];
 		flag = set_flag;
 		break;
+
 	case 0x05:
 		sys->registers[dest] = sys->registers[dest] - sys->registers[src];
 		set_flag = sys->registers[dest] >= sys->registers[src];
 		flag = set_flag;
 		break;
+
 	case 0x06:
 		set_flag = true;
 		flag = sys->registers[dest] & 0x01;
 		sys->registers[dest] >>= 1;
 		break;
+
 	case 0x07:
 		sys->registers[dest] = sys->registers[src] - sys->registers[dest];
 		set_flag = sys->registers[src] >= sys->registers[dest];
 		flag = set_flag;
 		break;
+
 	case 0x0E:
 		set_flag = true;
 		flag = (sys->registers[dest] & 0x80) >> 7;
 		sys->registers[dest] <<= 1;
 		break;
+
 	default:
 		Log(1, "COMMAND MATH: Unrecognized operation %02X\n", op);
 		// TODO: Assert state and error flag in sys
@@ -220,8 +236,10 @@ void skip_key(System *sys, uint16_t args) {
 	switch (op) {
 	case 0x9E: // TODO: Key is pressed
 		break;
+
 	case 0xA1: // TODO: Key not pressed
 		break;
+
 	default:
 		Log(1, "COMMAND SKIP_KEY: Unrecognized operation %02X\n", op);
 		// TODO: Assert state and error flag in sys
@@ -238,41 +256,51 @@ void sys_ops(System *sys, uint16_t args) {
 	case 0x07:
 		sys->registers[reg] = sys->read_delay_timer(sys);
 		break;
+
 	case 0x0A: // TODO: Block until key is pressed, then store into register
 		break;
+
 	case 0x15:
 		sys->set_delay_timer(sys, sys->registers[reg]);
 		break;
+
 	case 0x18:
 		sys->set_sound_timer(sys, sys->registers[reg]);
 		break;
+
 	case 0x1E:
 		sys->addr_reg += sys->registers[reg];
 		break;
+
 	case 0x29:
 		// TODO: Set value of address register to location of 5-byte sprite
 		// given by Vx
 		break;
+
 	case 0x30:
 		// TODO: Set value of address register to location of 10-byte sprite
 		// given by Vx
 		break;
+
 	case 0x33: // Store binary-coded decimal representation of register at I,
 			   // I+1, I+2
 		sys->memory[sys->addr_reg] = sys->registers[reg] / 100;
 		sys->memory[sys->addr_reg + 1] = (sys->registers[reg] % 100) / 10;
 		sys->memory[sys->addr_reg + 2] = sys->registers[reg] % 10;
 		break;
+
 	case 0x55: // Dump V0:Vx (inclusive) in memory I0:Ix
 		for (int i = 0; i <= reg; i++) {
 			sys->memory[sys->addr_reg + i] = sys->registers[i];
 		}
 		break;
+
 	case 0x65: // Dump I0:Ix (inclusive) in registers V0:Vx
 		for (int i = 0; i <= reg; i++) {
 			sys->registers[i] = sys->memory[sys->addr_reg + i];
 		}
 		break;
+
 	case 0x75: // NOTE: Calculator-specific instructions, shouldn't need
 	case 0x85:
 	default:
