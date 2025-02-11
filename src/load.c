@@ -6,11 +6,7 @@
 #include <string.h>
 #include <unistd.h>
 
-void load_rom(System *sys, int arglen, char **args) {
-	assert(arglen == 2);
-
-	char *file_path = args[1];
-
+void load_rom(System *sys, char *file_path) {
 	FILE *rom_file;
 
 	Log(1, "LOAD: Opening %s\n", file_path);

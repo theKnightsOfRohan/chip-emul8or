@@ -1,5 +1,7 @@
 #include "operations.h"
+#include "display.h"
 #include "globals.h"
+#include "timer.h"
 #include <assert.h>
 #include <stdbool.h>
 #include <stdint.h>
@@ -342,4 +344,26 @@ void execute(System *sys, uint16_t operation) {
 	sys->add_pc(sys, 1);
 
 	instruction_set[opcode](sys, cleaned);
+}
+
+void add_pc(System *sys, uint8_t val) { sys->pc += (val * 2); }
+
+void setup_system(System *sys) {
+	System val = {
+		{0},   // Memory
+		{0},   // Registers
+		0,	   // Address Register
+		{0},   // Call stack
+		0,	   // Stack pointer
+		0x200, // Program Counter
+		&add_pc,
+		false, // Needs redraw
+		&redraw,
+		{{0}}, // Display
+		&set_delay_timer,
+		&set_sound_timer,
+		&read_delay_timer,
+	};
+
+	*sys = val;
 }

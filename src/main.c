@@ -11,7 +11,11 @@ int main(int argc, char **argv) {
 
 	setup_system(&sys);
 
-	load_rom(&sys, argc, argv);
+	assert(argc == 2);
+
+	char *file_path = argv[1];
+
+	load_rom(&sys, file_path);
 
 	uint16_t instruction = 0xFFFF;
 

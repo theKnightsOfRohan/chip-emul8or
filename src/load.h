@@ -4,6 +4,6 @@
 #include "globals.h"
 #include <stdint.h>
 
-void load_rom(System *sys, int arglen, char **args);
+void load_rom(System *sys, char *file_path);
 
 #endif // LOAD_H
