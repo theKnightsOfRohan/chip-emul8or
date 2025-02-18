@@ -53,7 +53,7 @@ void syscall(System *sys, uint16_t args) {
 			break;
 
 		default:
-			Log(1, "COMMAND MATH: Unrecognized operation %02X\n", op);
+			Log("COMMAND MATH: Unrecognized operation %02X\n", op);
 			// TODO: Assert state and error flag in sys
 		}
 	}
@@ -181,7 +181,7 @@ void math(System *sys, uint16_t args) {
 		break;
 
 	default:
-		Log(1, "COMMAND MATH: Unrecognized operation %02X\n", op);
+		Log("COMMAND MATH: Unrecognized operation %02X\n", op);
 		// TODO: Assert state and error flag in sys
 	}
 
@@ -243,7 +243,7 @@ void skip_key(System *sys, uint16_t args) {
 		break;
 
 	default:
-		Log(1, "COMMAND SKIP_KEY: Unrecognized operation %02X\n", op);
+		Log("COMMAND SKIP_KEY: Unrecognized operation %02X\n", op);
 		// TODO: Assert state and error flag in sys
 	}
 }
@@ -306,7 +306,7 @@ void sys_ops(System *sys, uint16_t args) {
 	case 0x75: // NOTE: Calculator-specific instructions, shouldn't need
 	case 0x85:
 	default:
-		Log(1, "COMMAND SYS_OPS: Unrecognized operation %02X\n", op);
+		Log("COMMAND SYS_OPS: Unrecognized operation %02X\n", op);
 		// TODO: Assert state and error flag in sys
 	}
 }
@@ -333,17 +333,15 @@ instruction instruction_set[16] = {
 // NOTE: Chip-8 instructions are stored big-endian, so first byte and last byte
 // of instruction are swapped compared to intuition
 void execute(System *sys, uint16_t operation) {
-	uint16_t cleaned =
-		((operation & 0xFF00) >> 8) + ((operation & 0x00FF) << 8);
 
-	uint16_t opcode = (cleaned & 0xF000) >> 12;
-	uint16_t args = (cleaned & 0x0FFF);
+	uint16_t opcode = (operation & 0xF000) >> 12;
+	uint16_t args = (operation & 0x0FFF);
 
-	Log(1, "EXECUTE: Opcode: %X, args: %03X\n", opcode, args);
+	// Log("EXECUTE: Opcode: %X, args: %03X\n", opcode, args);
 
 	sys->add_pc(sys, 1);
 
-	instruction_set[opcode](sys, cleaned);
+	instruction_set[opcode](sys, operation);
 }
 
 void add_pc(System *sys, uint8_t val) { sys->pc += (val * 2); }

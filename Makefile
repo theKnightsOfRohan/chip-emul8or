@@ -1,11 +1,10 @@
-LOG_FILE ?=
+LOG_FILE ?= "log.txt"
 TARGET = chip8
 ROM ?= ./test/roms/programs/Random\ Number\ Test\ \[Matthew\ Mikolay,\ 2010\].ch8
 CC = gcc
 CFLAGS = -g -c
 EXTRA_FLAGS ?= -Werror -Wall -Wextra -fsanitize=undefined,address
 
-LOG_LEVEL ?= 1
 PRINT ?= 1
 
 all: build run
@@ -22,7 +21,7 @@ compile: $(wildcard src/*)
 	mkdir -p log/
 	for file in $(wildcard src/*.c); do \
 		filename=$$(basename $$file); \
-		$(CC) $(CFLAGS) -o obj/$(notdir $${filename%.*}.o) $$file -DLOG_LEVEL=$(LOG_LEVEL); \
+		$(CC) $(CFLAGS) -o obj/$(notdir $${filename%.*}.o) $$file -DLOG_FILE_NAME='$(LOG_FILE)'; \
 	done
 
 compile_test: $(wildcard src/*.c) $(wildcard tests/test/*)
@@ -32,26 +31,25 @@ compile_test: $(wildcard src/*.c) $(wildcard tests/test/*)
 	for file in $(wildcard src/*.c); do \
 		filename=$$(basename $$file); \
 		if [ "$$filename" != "main.c" ]; then  \
-			$(CC) $(CFLAGS) -o obj/test/$(notdir $${filename%.*}.o) $$file -DLOG_LEVEL=$(LOG_LEVEL); \
+			$(CC) $(CFLAGS) -o obj/test/$(notdir $${filename%.*}.o) $$file -DLOG_FILE_NAME='"test_log.txt"'; \
 		fi \
 	done
 
 	for file in $(wildcard test/tests/*.c); do \
 		filename=$$(basename $$file); \
-		$(CC) $(CFLAGS) -o obj/test/$(notdir $${filename%.*}.o) $$file -DLOG_LEVEL=$(LOG_LEVEL); \
+		$(CC) $(CFLAGS) -o obj/test/$(notdir $${filename%.*}.o) $$file -DLOG_FILE_NAME='"test_log.txt"'; \
 	done
 
 link: compile
-	$(CC) -o bin/$(TARGET) $(wildcard obj/*.o) -DLOG_LEVEL=$(LOG_LEVEL)
+	$(CC) -o bin/$(TARGET) $(wildcard obj/*.o)
 
 link_test: compile_test
-	$(CC) -o bin/test/$(TARGET) $(wildcard obj/test/*.o) -DLOG_LEVEL=$(LOG_LEVEL)
+	$(CC) -o bin/test/$(TARGET) $(wildcard obj/test/*.o)
 
 run: link
 	./bin/$(TARGET) $(ROM)
 
-.PHONY: test
-test: link_test
+run_test: link_test
 	./bin/test/$(TARGET) $(ROM)
 
 .PHONY: debug

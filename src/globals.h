@@ -34,14 +34,10 @@ typedef struct System {
 
 void setup_system(System *sys);
 
-#ifndef LOG_LEVEL
-#define LOG_LEVEL 1
-#endif
-
 char LOG_FILE[64];
 FILE *LOG_FILE_HANDLE;
 
-void log_init(char *log_file);
+void log_init();
 
 void log_close();
 
@@ -51,27 +47,25 @@ void log_close();
 	}
 
 #define __eassert(e)                                                           \
-	Log(1, "Failed assertion '%s' with err \"%s\"\n", e, strerror(errno));     \
+	Log("Failed assertion '%s' with err \"%s\"\n", e, strerror(errno));        \
 	exit(EXIT_FAILURE);
 
-#define Log(level, pattern, ...)                                               \
+#define Log(pattern, ...)                                                      \
 	do {                                                                       \
-		__Log(level, pattern, ##__VA_ARGS__);                                  \
+		__Log(pattern, ##__VA_ARGS__);                                         \
 	} while (0);
 
 #ifndef NO_LOG
-#define __Log(level, pattern, ...)                                             \
+#define __Log(pattern, ...)                                                    \
 	do {                                                                       \
-		if (LOG_LEVEL >= level) {                                              \
-			fprintf(LOG_FILE_HANDLE, "[%s.%s:%d] " pattern, __FILE_NAME__,     \
-					__FUNCTION__, __LINE__, ##__VA_ARGS__);                    \
-			printf("[%s.%s:%d] " pattern, __FILE_NAME__, __FUNCTION__,         \
-				   __LINE__, ##__VA_ARGS__);                                   \
-			fflush(LOG_FILE_HANDLE);                                           \
-		}                                                                      \
+		fprintf(LOG_FILE_HANDLE, "[%s.%s:%d] " pattern, __FILE_NAME__,         \
+				__FUNCTION__, __LINE__, ##__VA_ARGS__);                        \
+		printf("[%s.%s:%d] " pattern, __FILE_NAME__, __FUNCTION__, __LINE__,   \
+			   ##__VA_ARGS__);                                                 \
+		fflush(LOG_FILE_HANDLE);                                               \
 	} while (0);
 #else
-#define __Log(level, pattern, ...) noop();
+#define __Log(pattern, ...) noop();
 #endif // NO_LOG
 
 #define noop() ((void)0);

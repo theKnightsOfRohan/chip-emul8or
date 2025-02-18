@@ -8,19 +8,19 @@
 
 void safe_exit() { exit(0); }
 
-void log_init(char *log_file) {
+void log_init() {
 #ifndef NO_LOG
 
-	if (log_file == NULL) {
-		log_file = "log.txt";
-	}
-
-	assert(snprintf(LOG_FILE, sizeof(LOG_FILE), "%s%s", "log/", log_file) > 0);
+#ifndef LOG_FILE_NAME
+	assert(snprintf(LOG_FILE, sizeof(LOG_FILE), "log/log.txt") > 0);
+#else
+	assert(snprintf(LOG_FILE, sizeof(LOG_FILE), "log/%s", LOG_FILE_NAME) > 0);
+#endif
 
 	LOG_FILE_HANDLE = fopen(LOG_FILE, "a");
 	eassert(LOG_FILE_HANDLE != NULL);
 
-	Log(1, "=======> LOG_INIT\n");
+	Log("=======> LOG_INIT\n");
 
 	atexit(log_close);
 
@@ -32,7 +32,7 @@ void log_init(char *log_file) {
 
 void log_close() {
 #ifndef NO_LOG
-	Log(1, "LOG_END <=======\n");
+	Log("LOG_END <=======\n");
 
 	fclose(LOG_FILE_HANDLE);
 

@@ -1,0 +1,4 @@
+CompileFlags:
+  Add: [-xc]
+  Compiler: clang
+  Remove: [-std=c++*, -x c++]

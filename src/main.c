@@ -5,7 +5,7 @@
 #include <stdio.h>
 
 int main(int argc, char **argv) {
-	log_init(NULL);
+	log_init();
 
 	System sys;
 
@@ -23,6 +23,9 @@ int main(int argc, char **argv) {
 		// TODO: This is what we call some bullshit
 		instruction = *((uint16_t *)&sys.memory[sys.pc]);
 
+		// Make sure to swap from big endian to make parsing easier
+		instruction =
+			((instruction & 0xFF00) >> 8) | ((instruction & 0x00FF) << 8);
 		execute(&sys, instruction);
 	}
 

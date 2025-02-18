@@ -9,7 +9,7 @@
 void load_rom(System *sys, char *file_path) {
 	FILE *rom_file;
 
-	Log(1, "LOAD: Opening %s\n", file_path);
+	Log("LOAD: Opening %s\n", file_path);
 
 	eassert((rom_file = fopen(file_path, "rb")) != NULL);
 
@@ -20,7 +20,7 @@ void load_rom(System *sys, char *file_path) {
 	assert(length % 2 == 0); // 16-bit instructions means multiple of 2 bytes
 	rewind(rom_file);
 
-	Log(2, "LOAD: Length of %s is %ld\n", file_path, length);
+	Log("LOAD: Length of %s is %ld\n", file_path, length);
 
 	uint8_t *contents = smalloc(length);
 
@@ -30,7 +30,7 @@ void load_rom(System *sys, char *file_path) {
 	assert(sizeof(char) == sizeof(uint8_t));
 	memcpy((sys->memory + 0x200), contents, length);
 
-	Log(3, "LOAD: Contents:\n%s\n", (char *)(sys->memory + 0x200));
+	// Log("LOAD: Contents:\n%s\n", (char *)(sys->memory + 0x200));
 
 	fclose(rom_file);
 }
